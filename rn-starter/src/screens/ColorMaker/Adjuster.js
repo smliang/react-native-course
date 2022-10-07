@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import {View, Text, StyleSheet, Button, FlatList} from "react-native";
 
+const AMT_CHANGE = 10;
+
 const Adjuster = ({color, updateColor}) => {
 
     return (
         <View>
-            <Button title={`Increase ${color}`} onPress={() =>{updateColor(prev => Math.min(prev+10, 255))}}/>
-            <Button title={`Decrease ${color}`} onPress={() =>{updateColor(prev => Math.max(0,prev-10))}}/>
+            <Button title={`Increase ${color}`} onPress={() => updateColor({action: "change_color", payload: {colorToChange: color.toLowerCase(), amount: AMT_CHANGE}})}/>
+            <Button title={`Decrease ${color}`} onPress={() => updateColor({action: "change_color", payload: {colorToChange: color.toLowerCase(), amount: -1*AMT_CHANGE}})}/>
         </View>
     )
 }

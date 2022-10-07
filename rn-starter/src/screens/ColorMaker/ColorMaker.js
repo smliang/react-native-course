@@ -1,20 +1,28 @@
-import React, {useState} from "react";
-import {View, Text, StyleSheet, Button, FlatList} from "react-native";
+import React, { useReducer } from "react";
+import { View, Text, StyleSheet, Button, FlatList } from "react-native";
 import Adjuster from "./Adjuster";
 
+const reducer = (state, action) => {
+    const {colorToChange, amount} = action.payload;
+    let res = {...state}
+    res[colorToChange] += amount
+    res[colorToChange] = Math.max(0, res[colorToChange])
+    res[colorToChange] = Math.min(255, res[colorToChange])
+    return res;
+}
+
 const ColorScreen = () => {
-    const [red, setRed] = useState(randomRGB())
-    const [blue, setBlue] = useState(randomRGB())
-    const [green, setGreen] = useState(randomRGB())
-    console.log(red,green,blue)
+
+    const [state, dispatch] = useReducer(reducer, { red: randomRGB(), green: randomRGB(), blue: randomRGB() })
+    console.log(state)
 
     return (
         <View style={style.container}>
-            <Text>Color Maker</Text> 
-            <Adjuster color="Red" updateColor={setRed}/>
-            <Adjuster color="Green" updateColor={setGreen}/>
-            <Adjuster color="Blue" updateColor={setBlue}/>
-            <View style={{width:150, height:150, backgroundColor:`rgb(${red},${green},${blue})`}} />
+            <Text>Color Maker</Text>
+            <Adjuster color="Red" updateColor={dispatch} />
+            <Adjuster color="Green" updateColor={dispatch} />
+            <Adjuster color="Blue" updateColor={dispatch} />
+            <View style={{ width: 150, height: 150, backgroundColor: `rgb(${state.red},${state.green},${state.blue})` }} />
         </View>
     )
 }
@@ -26,7 +34,7 @@ const randomRGB = () => {
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems:'center'
+        alignItems: 'center'
     }
 })
 
